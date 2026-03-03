@@ -1,15 +1,22 @@
-const express = require ("express");
+const express = require("express");
+const connectDB = require("./src/config/db");
+const app = express();
+const dotenv = require("dotenv");
 
-const app=express();
+ app.use(express.json());
 
-app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.end( "welcome");
-})
+ dotenv.config();
 
-const PORT = 9000;
+ app.use("/", (req, res) => {
+    res.end(`Begining of Talenvo program`);
+ });
 
-app.listen(PORT, () =>{
-    console.log(`Server is running on http://localhost:${PORT}`)
-})
+ 
+
+connectDB()
+ const PORT= 9000;
+
+ app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+ })
