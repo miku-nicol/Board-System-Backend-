@@ -46,4 +46,10 @@ const cardSchema = new Schema(
 { timestamps: true}
 )
 
+cardSchema.virtual("comments", {
+    ref: "Comment",
+    foreignField: "cardId",
+    localField: "_id"
+});
+
 module.exports = mongoose.model("Card", cardSchema);

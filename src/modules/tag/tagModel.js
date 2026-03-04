@@ -17,7 +17,9 @@ const tagSchema = new Schema(
         }
     
     },
-    {timestamps: true}
+    {timestamps: true} 
 )
+
+tagSchema.index({ boardId: 1, name: 1}, { unique: true });
 
 module.exports= mongoose.model("Tag", tagSchema)
