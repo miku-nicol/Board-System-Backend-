@@ -4,6 +4,7 @@ const app = express();
 const dotenv = require("dotenv");
 const userRouter = require("./src/modules/User/authRoutes");
 const boardRouter = require("./src/modules/board/boardRoutes");
+const columnRouter = require("./src/modules/column/columnRoutes");
 
  app.use(express.json());
 
@@ -13,8 +14,9 @@ const boardRouter = require("./src/modules/board/boardRoutes");
  
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/boards", boardRouter);
+app.use('/api/v1/column', columnRouter)
  
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
     res.end(`Begining of Talenvo program`);
  });
 
