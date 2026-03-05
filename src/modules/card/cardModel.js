@@ -29,10 +29,10 @@ const cardSchema = new Schema(
 
         },
         tags:[
-            [{
+            {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Tag"
-            }]
+            }
 
         ],
         dueDate: {

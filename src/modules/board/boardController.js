@@ -71,7 +71,7 @@ const updateBoard = async(req, res) =>{
         const { id } = req.params;
         const { title, description } = req.body;
 
-        const updatedBoard = await boardModel.findOneAndUpdate({_id: id, userId: req.user.userId}, {title, description}, {new: true, runValidators: true});
+        const updatedBoard = await boardModel.findOneAndUpdate({_id: id, userId: req.user.userId}, {title, description}, {returnDocument: "after", runValidators: true});
         
         if(!updatedBoard){
             return res.status(404).json({ 

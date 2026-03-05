@@ -60,7 +60,7 @@ const updateColumn = async(req, res) =>{
             })
         }
 
-    const updated = await ColumnModel.findOneAndUpdate({_id: id, boardId: boardId },{title,position},{new: true, runValidators: true})
+    const updated = await ColumnModel.findOneAndUpdate({_id: id, boardId: boardId },{title,position},{returnDocument: "after", runValidators: true})
 
     if(!updated){
  return res.status(404).json({
