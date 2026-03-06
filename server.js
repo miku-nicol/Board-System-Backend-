@@ -1,5 +1,6 @@
 const express = require("express");
 const connectDB = require("./src/config/db");
+const cors = require("cors");
 const app = express();
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs")
@@ -11,6 +12,7 @@ const cardRouter = require("./src/modules/card/cardRoutes");
 const tagRouter = require("./src/modules/tag/tagRoutes");
 const swaggerDocument = YAML.load('./swagger.yaml');
 
+app.use(cors());
  app.use(express.json());
 
 

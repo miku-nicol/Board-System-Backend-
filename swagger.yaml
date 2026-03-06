@@ -7,6 +7,9 @@ servers:
   - url: http://localhost:9000/api/v1
     description: Local server
 
+  - url: https://board-system-backend-project.onrender.com/api/v1
+    description: Production server
+
 components:
   securitySchemes:
     bearerAuth:
