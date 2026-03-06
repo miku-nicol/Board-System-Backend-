@@ -13,3 +13,6 @@ user->board : one to many,
 board->column : one to many,
 column->card : one to many,
 card->tags : many to many,
+
+## link to deploy api
+https://board-system-backend-project.onrender.com/
