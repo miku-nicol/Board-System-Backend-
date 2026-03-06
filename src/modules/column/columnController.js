@@ -1,5 +1,5 @@
 const boardModel = require("../board/boardModel");
-const ColumnModel = require("./ColumnModel");
+const ColumnModel = require("./columnModel");
 
 
 const createColumn = async ( req, res) => {
