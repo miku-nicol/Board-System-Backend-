@@ -285,14 +285,14 @@ const assignTag = async (req, res) => {
     }
 
     
-    if (card.tags.includes(name)) {
+    if (card.tags.includes(taged._id)) {
       return res.status(400).json({
         success: false,
         message: "Tag already assigned to this card"
       });
     }
 
-    card.tags.push(name);
+    card.tags.push(taged._id);
     await card.save();
 
     return res.status(200).json({
