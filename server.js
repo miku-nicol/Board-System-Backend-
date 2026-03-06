@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 
 
 connectDB()
- const PORT= 9000;
+ const PORT= process.env.PORT;
 
  app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
