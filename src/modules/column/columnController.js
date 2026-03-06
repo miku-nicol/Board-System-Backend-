@@ -1,5 +1,5 @@
 const boardModel = require("../board/boardModel");
-const ColumnModel = require("./columnModel");
+const columnModel = require("./columnModel");
 
 
 const createColumn = async ( req, res) => {
@@ -22,7 +22,7 @@ const createColumn = async ( req, res) => {
             });
         }
 
-        const newColumn = await ColumnModel.create({
+        const newColumn = await columnModel.create({
             boardId,
             title,
             position
@@ -60,7 +60,7 @@ const updateColumn = async(req, res) =>{
             })
         }
 
-    const updated = await ColumnModel.findOneAndUpdate({_id: id, boardId: boardId },{title,position},{returnDocument: "after", runValidators: true})
+    const updated = await columnModel.findOneAndUpdate({_id: id, boardId: boardId },{title,position},{returnDocument: "after", runValidators: true})
 
     if(!updated){
  return res.status(404).json({
@@ -100,7 +100,7 @@ const deleteColumn = async(req, res) =>{
             });
         }
 
-    const deleted = await ColumnModel.findOneAndDelete({_id: id, boardId: boardId})
+    const deleted = await columnModel.findOneAndDelete({_id: id, boardId: boardId})
     if(!deleted){
         return res.status(404).json({
             success: false,

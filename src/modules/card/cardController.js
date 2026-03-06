@@ -1,5 +1,5 @@
 const boardModel = require("../board/boardModel");
-const ColumnModel = require("../column/ColumnModel");
+const ColumnModel = require("../column/columnModel");
 const tagModel = require("../tag/tagModel");
 const cardModel = require("./cardModel");
 
