@@ -242,17 +242,17 @@ const getCardsInColumn = async (req, res) => {
 const assignTag = async (req, res) => {
   try {
 
-    const { cardId } = req.params;
-    const { tagId } = req.body;
+    const { id } = req.params;
+    const { name } = req.body;
 
-    if (!tagId) {
+    if (!name) {
       return res.status(400).json({
         success: false,
-        message: "Tag ID is required"
+        message: "Name  is required"
       });
     }
 
-    const card = await cardModel.findById(cardId);
+    const card = await cardModel.findById(id);
 
     if (!card) {
       return res.status(404).json({
@@ -261,9 +261,23 @@ const assignTag = async (req, res) => {
       });
     }
 
-    const tag = await tagModel.findById(tagId);
+    const column = await ColumnModel.findById(card.columnId);
+    const board = await boardModel.findOne({
+      _id: column.boardId,
+      userId: req.user.userId
+    });
 
-    if (!tag) {
+    if (!board) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
+
+
+    const taged = await tagModel.findOne({name: name, boardId: board._id});
+
+    if (!taged) {
       return res.status(404).json({
         success: false,
         message: "Tag not found"
@@ -271,14 +285,14 @@ const assignTag = async (req, res) => {
     }
 
     
-    if (card.tags.includes(tagId)) {
+    if (card.tags.includes(name)) {
       return res.status(400).json({
         success: false,
         message: "Tag already assigned to this card"
       });
     }
 
-    card.tags.push(tagId);
+    card.tags.push(name);
     await card.save();
 
     return res.status(200).json({
@@ -303,7 +317,7 @@ const assignTag = async (req, res) => {
 
 const setDueDate = async (req, res) => {
   try {
-    const { cardId } = req.params;
+    const { id } = req.params;
     const { dueDate } = req.body;
 
     if (!dueDate) {
@@ -313,7 +327,7 @@ const setDueDate = async (req, res) => {
       });
     }
 
-    const card = await cardModel.findById(cardId);
+    const card = await cardModel.findById(id);
 
     if (!card) {
       return res.status(404).json({
