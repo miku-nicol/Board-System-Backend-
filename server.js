@@ -2,6 +2,7 @@ const express = require("express");
 const connectDB = require("./src/config/db");
 const cors = require("cors");
 const app = express();
+const server = http.createServer(app);
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs")
 const dotenv = require("dotenv");
@@ -10,6 +11,7 @@ const boardRouter = require("./src/modules/board/boardRoutes");
 const columnRouter = require("./src/modules/column/columnRoutes");
 const cardRouter = require("./src/modules/card/cardRoutes");
 const tagRouter = require("./src/modules/tag/tagRoutes");
+const { initSocket } = require("./src/realtime/socket");
 const swaggerDocument = YAML.load('./swagger.yaml');
 
 app.use(cors());
@@ -34,6 +36,10 @@ app.get("/", (req, res) => {
 
 connectDB()
  const PORT= process.env.PORT;
+
+
+ initSocket(server);
+
 
  app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

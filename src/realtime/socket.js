@@ -24,6 +24,11 @@
     });
  };
 
- const getIO = () => io;
+ const getIO = () => {
+    if (!io) {
+        throw new Error("socket not initialized")
+    }
+    return io;
+ };
 
  module.exports = { initSocket, getIO};
