@@ -1,12 +1,13 @@
 const express = require("express");
 const connectDB = require("./src/config/db");
 const cors = require("cors");
+const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs")
 const dotenv = require("dotenv");
-const userRouter = require("./src/modules/User/authRoutes");
+const userRouter = require("./src/modules/User/userRoutes");
 const boardRouter = require("./src/modules/board/boardRoutes");
 const columnRouter = require("./src/modules/column/columnRoutes");
 const cardRouter = require("./src/modules/card/cardRoutes");
@@ -41,7 +42,7 @@ connectDB()
  initSocket(server);
 
 
- app.listen(PORT, () => {
+ server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
     console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 

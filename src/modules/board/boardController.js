@@ -1,19 +1,14 @@
-const boardModel = require("./boardModel");
+const boardService = require("./boardService")
 
 
 const createBoard = async(req, res) =>{
     try {
         console.log("User from token:", req.user);
-        const { title, description}=req.body;
+        console.log(req.body);
+        const { title, description } =req.body;
 
-        if(!title || !description){
-            return res.status(400).json({
-                success: false,
-                message: "Title and Description are required"
-            })
-        }
-
-        const board = await boardModel.create({
+    
+        const board = await boardService.createBoard({
             title,
             description,
             userId: req.user.userId
@@ -40,19 +35,13 @@ const createBoard = async(req, res) =>{
 const getUserBoards = async (req, res)=>{
     try {
         
-        const userBoard = await boardModel.find({ userId: req.user.userId});
-        if (userBoard.length === 0){
-            return res.status(404).json({
-                success: false,
-                message: "No board found for this user"
-            })
-        }
+        const boards = await boardService.getUserBoards(req.user.userId);
 
         res.status(200).json({
             success: true,
-            count: userBoard.length,
-            data: userBoard
-        })
+            count: boards.length,
+            data: boards
+        });
 
 
     } catch (error) {
@@ -71,14 +60,13 @@ const updateBoard = async(req, res) =>{
         const { id } = req.params;
         const { title, description } = req.body;
 
-        const updatedBoard = await boardModel.findOneAndUpdate({_id: id, userId: req.user.userId}, {title, description}, {returnDocument: "after", runValidators: true});
-        
-        if(!updatedBoard){
-            return res.status(404).json({ 
-                success: false,
-                message: "Board not found or unauthorized"
-            })
-        }
+         const updatedBoard = await boardService.updateBoard(
+            id,
+            req.user.userId,
+            title,
+            description
+         )
+
         res.status(200).json({
             success: true,
             message: "Board updated successfully",
@@ -98,14 +86,10 @@ const updateBoard = async(req, res) =>{
 const deleteBoard = async(req, res) =>{
     try {
         const { id } = req.params;
-        const deleted = await boardModel.findOneAndDelete({_id: id, userId: req.user.userId });
+         
+     await boardService.deleteBoard(id, req.user.userId);
 
-        if (!deleted){
-            return res.status(404).json({
-                successs: false,
-                message: "Board not found or unauthorized"
-            })
-        };
+         
        return res.status(200).json({
             success: true,
             message: "Board deleted successfuly"
