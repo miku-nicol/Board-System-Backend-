@@ -42,6 +42,11 @@ const cardSchema = new Schema(
 
         },
 
+        version: {
+            type: Number,
+            default: 1
+        }
+
     },
 { timestamps: true}
 )
@@ -51,5 +56,8 @@ cardSchema.virtual("comments", {
     foreignField: "cardId",
     localField: "_id"
 });
+
+cardSchema.set("toJSON", { virtuals: true });
+cardSchema.set("toObject", { virtuals: true });
 
 module.exports = mongoose.model("Card", cardSchema);

@@ -23,7 +23,7 @@ const columnSchema = new Schema({
 
 },
 
-{ timestamps: true}
+{ timestamps: true }
 
 )
 module.exports= mongoose.model("Column", columnSchema)

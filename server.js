@@ -13,6 +13,7 @@ const columnRouter = require("./src/modules/column/columnRoutes");
 const cardRouter = require("./src/modules/card/cardRoutes");
 const tagRouter = require("./src/modules/tag/tagRoutes");
 const { initSocket } = require("./src/realtime/socket");
+const { commentRouter } = require("./src/modules/comment/commentRoutes");
 const swaggerDocument = YAML.load('./swagger.yaml');
 
 app.use(cors());
@@ -27,6 +28,7 @@ app.use("/api/v1/boards", boardRouter);
 app.use('/api/v1/column', columnRouter);
 app.use('/api/v1/card', cardRouter);
 app.use('/api/v1/tag', tagRouter);
+app.use('/api/v1/comment', commentRouter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
  

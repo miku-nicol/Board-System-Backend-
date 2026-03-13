@@ -1,9 +1,7 @@
-const boardModel = require("../board/boardModel");
-const ColumnModel = require("../column/columnModel");
-const tagModel = require("../tag/tagModel");
-const cardModel = require("./cardModel");
+ const { emitCardCreated, emitCardMoved } = require("../../realtime/emitter");
+const cardService = require("./cardService");
 
-
+ 
 const createCard = async ( req, res) => {
     try {
         
@@ -15,40 +13,22 @@ const createCard = async ( req, res) => {
                 message: "All fields required"
             })
         }
-        const column = await ColumnModel.findById(columnId);
-
-        if (!column){
-            return res.status(403).json({
-                success: false,
-                message: "Column not found"
-            })
-        }
-
-        const board = await boardModel.findOne({
-      _id: column.boardId,
-      userId: req.user.userId
-    });
-
-    if (!board) {
-      return res.status(403).json({
-        success: false,
-        message: "Unauthorized"
-      });
-    }
-
-
-        const newCard = await cardModel.create({
+      
+        const { card, boardId }= await cardService.createCard({
             title,
             description,
             position,
-            columnId
+            columnId,
+            userId: req.user.userId
         })
+
+        emitCardCreated(boardId, card);
 
         return res.status(201).json({
             success: true,
             message: " Card created successfully",
-            data: newCard
-        })
+            data: card, boardId
+        });
 
 
     } catch (error) {
@@ -69,43 +49,14 @@ const updateCard = async (req, res) => {
     const { id } = req.params;
     const { title, description, position } = req.body;
 
-    
-     
-    
-    const card = await cardModel.findById(id);
-    if (!card) {
-      return res.status(404).json({
-        success: false,
-        message: "Card not found"
-      })
-    }
-
-    const column = await ColumnModel.findById(card.columnId);
-    if (!column) {
-      return res.status(404).json({
-        success: false,
-        message: "Column not found"
-      });
-    }
-
-    
-    const board = await boardModel.findOne({
-      _id: column.boardId,
-      userId: req.user.userId
-    });
-
-    if (!board) {
-      return res.status(403).json({
-        success: false,
-        message: "Unauthorized"
-      });
-    }
-
-    
-    const updatedCard = await cardModel.findByIdAndUpdate(
-      id,
-      { title, description, position },
-      { returnDocument: "after", runValidators: true }
+    const updatedCard = await cardService.updateCard(
+       {
+        id,
+        title,
+        description,
+        position,
+        userId: req.user.userId
+       }
     );
 
     return res.status(200).json({
@@ -127,54 +78,15 @@ const cardDelete = async ( req, res) => {
     try {
         const { id }= req.params;
 
-
-        const card = await cardModel.findById(id);
-    if (!card) {
-      return res.status(404).json({
-        success: false,
-        message: "Card not found"
-      })
-    }
-
-
-    const column = await ColumnModel.findById(card.columnId);
-    if (!column) {
-      return res.status(404).json({
-        success: false,
-        message: "Column not found"
-      });
-    }
-
-
-    const board = await boardModel.findOne({
-      _id: column.boardId,
-      userId: req.user.userId
-    });
-
-    if (!board) {
-      return res.status(403).json({
-        success: false,
-        message: "Unauthorized"
-      });
-    }
-
-    const deleted = await cardModel.findById(id)
-
-    if(!deleted){
-        return res.status(400).json({
-            success: false,
-            message: " could not be deleted"
-        })
-    }
+     const boardId = await cardService.deleteCard({ id, userId: req.user.userId});
 
     return res.status(200).json({
       success: true,
-      message: "Card deleted successfully"
+      message: "Card deleted successfully",
+      boardId
+
     });
 
-
-
-        
     } catch (error) {
 
         console.error("Error deleting card", error);
@@ -193,33 +105,10 @@ const getCardsInColumn = async (req, res) => {
   try {
     const { columnId } = req.params;
 
-     
-    
-    const column = await ColumnModel.findById(columnId);
-    if (!column) {
-      return res.status(404).json({
-        success: false,
-        message: "Column not found"
-      });
-    }
-
-    
-    const board = await boardModel.findOne({
-      _id: column.boardId,
-      userId: req.user.userId
+    const cards = await cardService.getCardsInColumn({
+      columnId, userId: req.userId.user
     });
-
-    if (!board) {
-      return res.status(403).json({
-        success: false,
-        message: "Unauthorized"
-      });
-    }
-
-    // 4️⃣ Get cards
-    const cards = await cardModel
-      .find({ columnId })
-      .sort({ position: 1 }); 
+      
 
     return res.status(200).json({
       success: true,
@@ -252,48 +141,7 @@ const assignTag = async (req, res) => {
       });
     }
 
-    const card = await cardModel.findById(id);
-
-    if (!card) {
-      return res.status(404).json({
-        success: false,
-        message: "Card not found"
-      });
-    }
-
-    const column = await ColumnModel.findById(card.columnId);
-    const board = await boardModel.findOne({
-      _id: column.boardId,
-      userId: req.user.userId
-    });
-
-    if (!board) {
-      return res.status(403).json({
-        success: false,
-        message: "Unauthorized"
-      });
-    }
-
-
-    const taged = await tagModel.findOne({name: name, boardId: board._id});
-
-    if (!taged) {
-      return res.status(404).json({
-        success: false,
-        message: "Tag not found"
-      });
-    }
-
-    
-    if (card.tags.includes(taged._id)) {
-      return res.status(400).json({
-        success: false,
-        message: "Tag already assigned to this card"
-      });
-    }
-
-    card.tags.push(taged._id);
-    await card.save();
+    const card = await cardService.assignTag({ id, name, userId: req.user.userId})
 
     return res.status(200).json({
       success: true,
@@ -327,18 +175,7 @@ const setDueDate = async (req, res) => {
       });
     }
 
-    const card = await cardModel.findById(id);
-
-    if (!card) {
-      return res.status(404).json({
-        success: false,
-        message: "Card not found"
-      });
-    }
-
-    card.dueDate = dueDate;
-
-    await card.save();
+    const card = await cardService.setDueDate({ id, dueDate, userId: req.user.userId})
 
     return res.status(200).json({
       success: true,
@@ -356,6 +193,32 @@ const setDueDate = async (req, res) => {
   }
 };
 
+const moveCard = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { columnId, position } = req.body;
+
+    const card = await cardService.moveCard({
+      cardId: id,
+      newColumnId: columnId,
+      newPosition: position,
+      userId: req.user.userId
+    });
+
+    emitCardMoved(boardId, card)
+
+    return res.status(200).json({
+      success: true,
+      message: "card moved successfully",
+      data: card
+    })
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
 
 
 
@@ -366,4 +229,4 @@ const setDueDate = async (req, res) => {
 
 
 
-module.exports = { createCard, updateCard, cardDelete, getCardsInColumn, assignTag, setDueDate}
+module.exports = { createCard, updateCard, cardDelete, getCardsInColumn, assignTag, setDueDate, moveCard}

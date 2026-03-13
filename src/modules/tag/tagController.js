@@ -1,6 +1,4 @@
-const boardModel = require("../board/boardModel");
-const tagModel = require("./tagModel");
-
+ const tagService= require("./tagService");
 
 const createTag = async (req, res) => {
   try {
@@ -13,35 +11,10 @@ const createTag = async (req, res) => {
       });
     }
 
-    
-    const board = await boardModel.findOne({
-      _id: boardId,
+    const tag = await tagService.createTag({
+      name,
+      boardId,
       userId: req.user.userId
-    });
-
-    if (!board) {
-      return res.status(403).json({
-        success: false,
-        message: "Unauthorized"
-      });
-    }
-
-    
-    const existingTag = await tagModel.findOne({
-      name,
-      boardId
-    });
-
-    if (existingTag) {
-      return res.status(400).json({
-        success: false,
-        message: "Tag already exists for this board"
-      });
-    }
-
-    const tag = await tagModel.create({
-      name,
-      boardId
     });
 
     return res.status(201).json({
@@ -61,4 +34,27 @@ const createTag = async (req, res) => {
   }
 };
 
-module.exports = { createTag };
+const getBoardTags = async (req, res) =>{
+  try {
+    const { boardId } = req.params;
+
+    const tags = await tagService.getBoardTags({ boardId})
+
+    return res.status(200).json({
+      success: true,
+      message: tags
+    })
+    
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "error.message"
+    })
+    
+  }
+
+
+}
+  
+
+module.exports = { createTag, getBoardTags };
