@@ -1,6 +1,7 @@
 const express = require("express");
 const validateUser = require("../../middleware/authMiddleware");
-const { createBoard, getUserBoards, updateBoard, deleteBoard } = require("./boardController");
+const { createBoard, getUserBoards, updateBoard, deleteBoard, addMember, removeMember } = require("./boardController");
+
 
 const boardRouter = express.Router()
 
@@ -8,5 +9,7 @@ const boardRouter = express.Router()
  boardRouter.get("/", validateUser, getUserBoards);
  boardRouter.patch("/:id", validateUser, updateBoard);
  boardRouter.delete("/:id", validateUser, deleteBoard);
+ boardRouter.post("/:id/members", validateUser, addMember);
+ boardRouter.delete("/:id/members", validateUser, removeMember);
 
  module.exports = boardRouter;

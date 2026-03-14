@@ -106,5 +106,57 @@ const deleteBoard = async(req, res) =>{
     }
 };
 
+const addMember = async(req, res) => {
+    try {
+        const { boardId } = req.params;
+        const { memberId } = req.body
 
-module.exports = { createBoard, getUserBoards, updateBoard, deleteBoard};
+        const board = await boardService.addMember({ 
+            boardId, 
+            ownerId: req.user.userId, 
+             memberId
+        })
+return res.status(200).json({
+    success: true,
+    message: "Member added successfully",
+    data: board
+})
+
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+        
+    }
+}
+const removeMember = async(req, res) => {
+    try {
+        const { id } = req.params;
+        const { memberId} = req.body
+
+        const board = await boardService.findById({ 
+            boardId: id, 
+            ownerId: req.user.userId, 
+             memberId
+        })
+return res.status(200).json({
+    success: true,
+    message: "Member removed successfully",
+    data: board
+})
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+        
+    }
+}
+
+
+module.exports = { createBoard, getUserBoards, updateBoard, deleteBoard, addMember, removeMember};

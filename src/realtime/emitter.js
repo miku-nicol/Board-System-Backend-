@@ -22,4 +22,4 @@ const emitCommentAdded = (boardId, comment) => {
 }
 
 
-module.exports = { emitCardCreated, emitCardMoved, emit}
+module.exports = { emitCardCreated, emitCardMoved, emitCommentAdded }

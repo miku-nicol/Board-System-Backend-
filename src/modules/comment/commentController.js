@@ -19,7 +19,7 @@ const addComment = async(req, res) => {
             userId: req.user.userId
         });
 
-        emitCommentAdded(boardId, comment)
+        emitCommentAdded(boardId, comment);
 
         return res.status(201).json({
             success: true,

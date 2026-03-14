@@ -5,4 +5,4 @@ module.exports = {
     CARD_MOVED: "cardMoved",
     
     COMMENT_ADDED: "commentAdded"
-}
+};

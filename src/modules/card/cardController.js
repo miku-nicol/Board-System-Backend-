@@ -205,7 +205,7 @@ const moveCard = async (req, res) => {
       userId: req.user.userId
     });
 
-    emitCardMoved(boardId, card)
+    emitCardMoved(boardId, card);
 
     return res.status(200).json({
       success: true,

@@ -9,7 +9,8 @@ const createBoard = async ({title, description, userId}) => {
     const board = await boardRepository.createBoard({
         title,
         description,
-        userId
+        ownerId: userId,
+        members: []
     });
     
     return board;
@@ -18,7 +19,7 @@ const createBoard = async ({title, description, userId}) => {
 const getUserBoards = async (userId) => {
     const boards = await boardRepository.findBoardsByUser(userId);
 
-    if(!boards.lenght) {
+    if(!boards.length) {
         throw new Error("No board found for this user");
     }
 
@@ -49,5 +50,42 @@ const deleteBoard = async (boardId, userId) => {
     return deleted;
 }
 
+const addMember = async ({ boardId, ownerId, memberId }) => {
+    const board = await boardRepository.addMember(boardId);
 
-module.exports = { createBoard, getUserBoards, updateBoard, deleteBoard }
+    if (!board) throw new Error ("Board not found");
+
+    if (board.userId.toString() !== ownerId) {
+        throw new Error("Only board owner can add members");
+    }
+
+    if (board.members.includes(memberId)) {
+        throw new Error("User already a member");
+    }
+
+    board.members.push(memberId);
+
+    return await board.save();
+};
+
+
+const removeMember = async ({ boardId, ownerId, memberId }) => {
+    const board = await boardRepository.removeMember(boardId);
+
+    if (!board) throw new Error("Board not found")
+
+        if(board.userId.toString() !== ownerId){
+            throw new Error("Only owner can remove members");
+        }
+
+        board.members = board.members.filter(
+            id => id.toString() !== memberId
+        );
+
+        return await board.save();
+};
+
+
+
+
+module.exports = { createBoard, getUserBoards, updateBoard, deleteBoard, removeMember, addMember }
