@@ -53,6 +53,10 @@ const removeMember = async ( boardId, ownerId, memberId) => {
     );
 };
 
+const findBoardById = async (boardId) => {
+    return boardModel.findById(boardId);
+}
 
-module.exports = { createBoard, findBoardsByUser, updateBoard, deleteBoard, addMember, removeMember }
+
+module.exports = { createBoard, findBoardsByUser, updateBoard, deleteBoard, addMember, removeMember, findBoardById }
 

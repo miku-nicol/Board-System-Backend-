@@ -6,7 +6,7 @@ const createColumn = async ( req, res) => {
         const { boardId, title, position} = req.body
 
          
-        const newColumn = await columnService.create({
+        const newColumn = await columnService.createColumn({
             boardId,
             title,
             position,
@@ -34,7 +34,7 @@ const createColumn = async ( req, res) => {
 
 const updateColumn = async(req, res) =>{
     try {
-        const { id} = req.params;
+        const { id } = req.params;
         const { boardId,title, position} = req.body
 
          

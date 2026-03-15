@@ -19,11 +19,11 @@ const updateById = async (id, version, updateData) => {
     return await cardModel.findByIdAndUpdate(
         {
             _id: id,
-            version
+            __v: version
         },
         {
             ...updateData,
-            $inc: { version: 1 }
+            $inc: { __v: 1 }
         },
         { returnDocument: "after", runValidators: true }
     );

@@ -47,7 +47,7 @@ const createCard = async ( req, res) => {
 const updateCard = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, position } = req.body;
+    const { title, description, position, __v } = req.body;
 
     const updatedCard = await cardService.updateCard(
        {
@@ -55,6 +55,7 @@ const updateCard = async (req, res) => {
         title,
         description,
         position,
+        version: __v,
         userId: req.user.userId
        }
     );
@@ -66,6 +67,14 @@ const updateCard = async (req, res) => {
     });
 
   } catch (error) {
+
+    if (error.status === 409) {
+      return res.status(409).json({
+        success: false,
+        message: error.message
+      });
+    }
+
     console.error("Error updating card", error);
     return res.status(500).json({
       success: false,

@@ -24,7 +24,7 @@ const verifyBoardAccess = async (columnId, userId) => {
 const createCard = async ({ title, description, position, columnId, userId}) => {
     const { board } = await verifyBoardAccess(columnId, userId);
 
-    const card = await cardRespository.create({ title, description, position, columnId });
+    const card = await cardRespository.createCard({ title, description, position, columnId });
 
     return { card, boardId: board._id };
 };
@@ -38,6 +38,16 @@ const updateCard = async ({ id, title, description, position,version, userId }) 
 
     await verifyBoardAccess(card.columnId, userId);
 
+    if (card.__v !== version){
+       
+        const error = new Error("Conflict detected. card was updated by another user.");
+
+ error.status = 409;
+    throw error;
+    }
+
+    
+
     const updateData = {};
 
     if (title) updateData.title = title;
@@ -47,7 +57,9 @@ const updateCard = async ({ id, title, description, position,version, userId }) 
     const updated = await cardRespository.updateById(id, version, updateData);
 
     if (!updated) {
-        throw new Error("Conflict detected. Card was updated by another users.")
+        const error = new Error("Conflict detected. Card was updated by another user.")
+        error.status = 409;
+        throw error;
     }
 
     return updated;

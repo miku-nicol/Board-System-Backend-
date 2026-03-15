@@ -59,5 +59,6 @@ cardSchema.virtual("comments", {
 
 cardSchema.set("toJSON", { virtuals: true });
 cardSchema.set("toObject", { virtuals: true });
+cardSchema.set("optimisticConcurrency", true);
 
 module.exports = mongoose.model("Card", cardSchema);

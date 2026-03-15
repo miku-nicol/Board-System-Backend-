@@ -51,11 +51,12 @@ const deleteBoard = async (boardId, userId) => {
 }
 
 const addMember = async ({ boardId, ownerId, memberId }) => {
-    const board = await boardRepository.addMember(boardId);
+
+    const board = await boardRepository.findBoardById(boardId);
 
     if (!board) throw new Error ("Board not found");
 
-    if (board.userId.toString() !== ownerId) {
+    if (board.ownerId.toString() !== ownerId) {
         throw new Error("Only board owner can add members");
     }
 
@@ -70,11 +71,11 @@ const addMember = async ({ boardId, ownerId, memberId }) => {
 
 
 const removeMember = async ({ boardId, ownerId, memberId }) => {
-    const board = await boardRepository.removeMember(boardId);
+    const board = await boardRepository.findBoardById(boardId);
 
     if (!board) throw new Error("Board not found")
 
-        if(board.userId.toString() !== ownerId){
+        if(board.ownerId.toString() !== ownerId){
             throw new Error("Only owner can remove members");
         }
 

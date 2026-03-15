@@ -108,11 +108,11 @@ const deleteBoard = async(req, res) =>{
 
 const addMember = async(req, res) => {
     try {
-        const { boardId } = req.params;
+        const { id } = req.params;
         const { memberId } = req.body
 
         const board = await boardService.addMember({ 
-            boardId, 
+            boardId: id, 
             ownerId: req.user.userId, 
              memberId
         })
@@ -137,7 +137,7 @@ const removeMember = async(req, res) => {
         const { id } = req.params;
         const { memberId} = req.body
 
-        const board = await boardService.findById({ 
+        const board = await boardService.removeMember({ 
             boardId: id, 
             ownerId: req.user.userId, 
              memberId
