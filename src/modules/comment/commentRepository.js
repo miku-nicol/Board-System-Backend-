@@ -16,8 +16,8 @@ const findByCard = async(cardId) => {
 
 };
 
-const update = async(id) =>{
-    return await commentModel.findByIdAndUpdate(id);
+const update = async(commentId, updateData) =>{
+    return await commentModel.findByIdAndUpdate(commentId, updateData, { returnDocument: "after"})
 };
 
 const deleteById = async(id) => {

@@ -3,6 +3,7 @@ const commentService = require("./commentService");
 
 const addComment = async(req, res) => {
     try {
+       
         const { cardId, content, parentComment } = req.body
 
         if(!cardId || !content){
@@ -11,8 +12,8 @@ const addComment = async(req, res) => {
                 message: " CardId and content are require"
             });
         }
-
-        const comment = await commentService.addComment({
+ console.log("cardId recived:", cardId)
+        const { comment, boardId}  = await commentService.addComment({
             cardId,
             content,
             parentComment,
@@ -30,9 +31,9 @@ const addComment = async(req, res) => {
 
 
     } catch (error) {
-        return res.status(400).json({
+        return res.status(500).json({
             success: false,
-            message: error.message
+            message: error.message || "Internal server error"
         })
         
     }
@@ -67,19 +68,24 @@ const editComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { commentId } = req.params;
+        const onlyReplies = req.query.onlyReplies === "true";
 
-        await commentService.deleteComment({
-            commentId: id,
-            userId: req.user.userId
+        const result = await commentService.deleteComment({
+            commentId,
+            userId: req.user.userId,
+            onlyReplies
         })
+
 
         return res.status(200).json({
             success: true,
-            message: "Comment deleted"
+            message: onlyReplies ? "Replies deleted successfully" : "Comment and its replies deleted successfully",
+            data: result
         });
 
     } catch (error) {
+        console.error("Error deleting comment:", error)
         return res.status(500).json({
             success: false,
             message: error.message
@@ -92,7 +98,10 @@ const getCardComments = async (req, res) => {
     try {
         const { cardId } = req.params;
 
-        const comments = await commentService.getCardComments(cardId);
+        const comments = await commentService.getCardComments({
+            cardId,
+            userId: req.user.userId
+        });
 
         return res.status(200).json({
             success: true,

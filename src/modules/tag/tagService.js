@@ -3,7 +3,7 @@ const boardRepository = require("../board/boardRespository");
 
 
 const createTag = async({ name, boardId, userId }) => {
-    const board = await boardRepository.findById(boardId)
+    const board = await boardRepository.findBoardById(boardId)
 
     if(!board) throw new Error("Board not found")
 

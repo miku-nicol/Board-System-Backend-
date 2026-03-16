@@ -40,12 +40,9 @@ const cardSchema = new Schema(
             default: null
 
 
-        },
-
-        version: {
-            type: Number,
-            default: 1
         }
+
+         
 
     },
 { timestamps: true}

@@ -6,7 +6,7 @@ const commentRouter = express.Router();
 
 commentRouter.post("/", validateUser, addComment);
 commentRouter.patch("/edit/:id", validateUser, editComment);
-commentRouter.delete("/:id", validateUser, deleteComment);
-commentRouter.get("/get", validateUser, getCardComments);
+commentRouter.delete("/:commentId", validateUser, deleteComment);
+commentRouter.get("/get/:cardId", validateUser, getCardComments);
 
 module.exports = { commentRouter };

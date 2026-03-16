@@ -5,7 +5,7 @@ const socket = io("http://localhost:9000");
 socket.on("connect", () => {
     console.log("Client2 connected:", socket.id);
 
-    socket.emit("joinBoard", "board123");
+    socket.emit("joinBoard", "69b4b17684dcc4f0ff5118b8");
 });
 
 socket.on("cardCreated", (data) => {

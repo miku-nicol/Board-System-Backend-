@@ -115,7 +115,7 @@ const getCardsInColumn = async (req, res) => {
     const { columnId } = req.params;
 
     const cards = await cardService.getCardsInColumn({
-      columnId, userId: req.userId.user
+      columnId, userId: req.user.userId
     });
       
 
@@ -162,6 +162,9 @@ const assignTag = async (req, res) => {
 
     console.error("Error assigning tag:", error);
 
+    if (error.message === "Tag not found") return res.status(404).json({success: false, message: error.message})
+    if (error.message === "Tag already assigned") return res.status(409).json({success: false, message: error.message})
+
     return res.status(500).json({
       success: false,
       message: "Internal server error"
@@ -182,6 +185,15 @@ const setDueDate = async (req, res) => {
         success: false,
         message: "Due date is required"
       });
+    }
+
+    const parsedDate = new Date(dueDate);
+
+    if (isNaN(parsedDate)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invaild date format. Use YYYY-MM-DD"
+      })
     }
 
     const card = await cardService.setDueDate({ id, dueDate, userId: req.user.userId})

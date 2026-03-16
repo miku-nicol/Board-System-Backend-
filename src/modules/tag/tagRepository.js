@@ -17,5 +17,9 @@ const deleteById = async(id) => {
     return await tagModel.findByIdAndDelete(id);
 };
 
+const findOne = async(query) => {
+    return await tagModel.findOne(query)
+}
 
-module.exports = { create, findByBoard, findById, deleteById };
+
+module.exports = { create, findByBoard, findById, deleteById, findOne  };

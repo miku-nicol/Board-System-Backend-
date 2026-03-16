@@ -1,7 +1,7 @@
 const boardModel = require("../board/boardModel");
 const columnModel = require("../column/columnModel");
-const tagModel = require("../tag/tagModel");
 const cardRespository = require("./cardRespository");
+const tagRepository = require("../tag/tagRepository")
 
 
 const verifyBoardAccess = async (columnId, userId) => {
@@ -89,14 +89,18 @@ const assignTag = async ({ id, name, userId }) =>{
     if (!card) throw new Error("Card not found");
 
     const { board } = await verifyBoardAccess(card.columnId, userId)
-    const tag = await tagModel.findOne({ name, boardId: board._id });
+    const tag = await tagRepository.findOne({ name, boardId: board._id });
 
     if (!tag) throw new Error ("Tag not found");
 
     if (card.tags.includes(tag._id)) throw new Error("Tag already assigned");
 
     card.tags.push(tag._id);
-    return await cardRespository.save(card);
+
+await card.save();
+await card.populate("tags");
+
+    return card;
 };
 
 
