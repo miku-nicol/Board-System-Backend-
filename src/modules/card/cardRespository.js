@@ -10,8 +10,8 @@ const createCard = async (data, session = null) => {
     return await cardModel.create(data);
 };
 
-const findById = async(id) => { 
-    return await cardModel.findById(id);
+const findById = async(id, session) => { 
+    return await cardModel.findById(id).session(session);
 };
 
 
@@ -37,11 +37,12 @@ const findByColumn = async (columnId) => {
     return await cardModel.find({ columnId}).sort({ position: 1 });
 };
 
-const save = async(card) => {
-    return await card.save();
+const save = async(card, session) => {
+    return await card.save({ session });
 };
 
 const positionInsert = async (columnId, position, session) => {
+    console.log("shifting card in column:", columnId)
     return await cardModel.updateMany(
         {
             columnId,
@@ -51,7 +52,10 @@ const positionInsert = async (columnId, position, session) => {
             $inc: { position: 1 }
         },
         { session }
+
+
     )
+    console.log("Insert shift modified:", result.modifiedCount);
 }
 
 const positionDelete = async (columnId, position, session) => {

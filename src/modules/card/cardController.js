@@ -219,7 +219,7 @@ const moveCard = async (req, res) => {
     const { id } = req.params;
     const { columnId, position } = req.body;
 
-    const card = await cardService.moveCard({
+    const { card, boardId } = await cardService.moveCard({
       cardId: id,
       newColumnId: columnId,
       newPosition: position,

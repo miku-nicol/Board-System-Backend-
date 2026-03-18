@@ -2,6 +2,7 @@ const boardModel = require("../board/boardModel");
 const columnModel = require("../column/columnModel");
 const cardRespository = require("./cardRespository");
 const tagRepository = require("../tag/tagRepository")
+const mongoose = require("mongoose");
 
 
 const verifyBoardAccess = async (columnId, userId) => {
@@ -120,16 +121,21 @@ const moveCard = async ({ cardId, newColumnId, newPosition, userId }) => {
     try {
         session.startTransaction();
 
-        const card = await cardRespository.findById(cardId);
+        const card = await cardRespository.findById(cardId, session);
 
         if(!card) throw new Error("Card not found");
 
         await verifyBoardAccess(card.columnId, userId);
         await verifyBoardAccess(newColumnId, userId);
 
+        
         const oldColumnId = card.columnId;
         const oldPosition = card.position;
 
+console.log("Old column:", oldColumnId);
+        console.log("New column:", newColumnId)
+        console.log("Old position:", oldPosition);
+        console.log("New position:", newPosition);
         /* close gap in old column*/
 
         await cardRespository.positionDelete(oldColumnId, oldPosition, session);
@@ -143,11 +149,22 @@ const moveCard = async ({ cardId, newColumnId, newPosition, userId }) => {
         card.position = newPosition;
 
         await cardRespository.save(card, session);
+
+        const column = await columnModel.findById(newColumnId);
+        const boardId = column.boardId;
         await session.commitTransaction();
 
-        return card;
+        return { card, boardId };
+
+        
+
     } catch (error){
-        await session.abortTransaction();
+        console.error("Move card transaction error:", error);
+
+        if(session.inTransaction()) {
+            await session.abortTransaction();
+        }
+        
         throw error;
     } finally {
         session.endSession();
