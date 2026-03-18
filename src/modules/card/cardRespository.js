@@ -33,9 +33,17 @@ const deleteById = async(id) => {
     return await cardModel.findByIdAndDelete(id);
 };
 
-const findByColumn = async (columnId) => {
-    return await cardModel.find({ columnId}).sort({ position: 1 });
+const findByColumn = async (columnId, skip, limit) => {
+    return await cardModel.find({ columnId})
+    .sort({ position: 1 })
+    .skip(skip)
+    .limit(limit)
+    .select("title position description")
 };
+
+const countByColumn = async (columnId) => {
+    return await cardModel.countDocuments({ columnId });
+}
 
 const save = async(card, session) => {
     return await card.save({ session });
@@ -55,7 +63,7 @@ const positionInsert = async (columnId, position, session) => {
 
 
     )
-    console.log("Insert shift modified:", result.modifiedCount);
+   
 }
 
 const positionDelete = async (columnId, position, session) => {
@@ -71,4 +79,4 @@ const positionDelete = async (columnId, position, session) => {
     )
 }
 
-module.exports = { createCard, findById, updateById, deleteById, findByColumn, save, positionDelete, positionInsert }
+module.exports = { createCard, findById, updateById, deleteById, findByColumn, save, positionDelete, positionInsert, countByColumn }

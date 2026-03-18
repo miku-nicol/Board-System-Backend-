@@ -6,15 +6,19 @@ const createBoard = async (data) => {
     return boardModel.create(data);
 };
 
-const findBoardsByUser = async (userId) => {
-    return boardModel.find({
-        $or: [
-        { ownerId: userId },
-        { members: userId }
-    ]
-})
-.populate("members")
-.populate("ownerId")
+const findBoardsByUser = async (query, skip, limit) => {
+    return boardModel.find(query)
+.select("title description ownerId members")
+.populate("members", "name email")
+.populate("ownerId", "name")
+.sort({ createdAt: -1 })
+.skip(skip)
+.limit(limit);
+
+};
+
+const countBoards = async(query) => {
+    return await boardModel.countDocuments(query);
 };
 
 const updateBoard = async (boardId, userId, updateData) => {
@@ -58,5 +62,5 @@ const findBoardById = async (boardId) => {
 }
 
 
-module.exports = { createBoard, findBoardsByUser, updateBoard, deleteBoard, addMember, removeMember, findBoardById }
+module.exports = { createBoard, findBoardsByUser, updateBoard, deleteBoard, addMember, removeMember, findBoardById, countBoards }
 

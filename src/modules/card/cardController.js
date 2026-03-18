@@ -113,16 +113,19 @@ const cardDelete = async ( req, res) => {
 const getCardsInColumn = async (req, res) => {
   try {
     const { columnId } = req.params;
+    const { page, limit } = req.query;
 
-    const cards = await cardService.getCardsInColumn({
-      columnId, userId: req.user.userId
+    const result = await cardService.getCardsInColumn({
+      columnId, 
+      userId: req.user.userId,
+      page: Number(page) || 1,
+      limit: Number(limit) || 10
     });
       
 
     return res.status(200).json({
       success: true,
-      count: cards.length,
-      data: cards
+      ...result
     });
 
   } catch (error) {

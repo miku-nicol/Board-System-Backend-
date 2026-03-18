@@ -16,14 +16,32 @@ const createBoard = async ({title, description, userId}) => {
     return board;
 };
 
-const getUserBoards = async (userId) => {
-    const boards = await boardRepository.findBoardsByUser(userId);
+const getUserBoards = async ({userId, page = 1, limit = 10 }) => {
+    const skip = (page - 1) * limit;
 
-    if(!boards.length) {
-        throw new Error("No board found for this user");
+    const query = {
+        $or: [
+            { ownerId: userId },
+            { members: userId }
+        ]
+    };
+
+    const [boards, total] = await Promise.all([
+        boardRepository.findBoardsByUser(query, skip, limit),
+        boardRepository.countBoards(query)
+    ]);
+
+    return {
+        data: boards,
+        pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit)
+        }
     }
+     
 
-    return boards;
 }
 
 

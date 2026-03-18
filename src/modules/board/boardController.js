@@ -34,14 +34,19 @@ const createBoard = async(req, res) =>{
 
 const getUserBoards = async (req, res)=>{
     try {
-        
-        const boards = await boardService.getUserBoards(req.user.userId);
+        const { page, limit } = req.query;
 
-        res.status(200).json({
-            success: true,
-            count: boards.length,
-            data: boards
+        const result = await boardService.getUserBoards({
+            userId: req.user.userId,
+            page: Number(page) || 1,
+            limit: Number(limit) || 10
         });
+
+        return res.status(200).json({
+            success: true,
+            ...result
+        })
+         
 
 
     } catch (error) {

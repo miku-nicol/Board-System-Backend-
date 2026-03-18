@@ -78,9 +78,25 @@ const deleteCard = async ({ id, userId }) => {
 };
 
 
-const getCardsInColumn = async({ columnId, userId }) => {
+const getCardsInColumn = async({ columnId, userId, page = 1, limit = 10 }) => {
+    const skip = (page - 1)* limit;
+
     await verifyBoardAccess(columnId, userId);
-    return await cardRespository.findByColumn(columnId);
+
+    const [cards, total] = await Promise.all([
+        cardRespository.findByColumn(columnId, skip, limit),
+        cardRespository.countByColumn(columnId)
+    ]);
+
+    return {
+        data: cards,
+        pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit)
+        }
+    }
 };
 
 
