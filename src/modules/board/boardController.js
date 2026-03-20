@@ -1,10 +1,11 @@
+const logger = require("../../utils/logger");
 const boardService = require("./boardService")
 
 
 const createBoard = async(req, res) =>{
     try {
-        console.log("User from token:", req.user);
-        console.log(req.body);
+        logger.info("User from token:", req.user);
+        logger.info("Resquest body:", req.body);
         const { title, description } =req.body;
 
     
@@ -22,7 +23,7 @@ const createBoard = async(req, res) =>{
         });
         
     } catch (error) {
-        console.error('Error creating board', error);
+        logger.error('Error creating board:', error);
         return res.status(500).json({
             success: false,
             error: "Internal server error."
@@ -50,7 +51,7 @@ const getUserBoards = async (req, res)=>{
 
 
     } catch (error) {
-        console.error("Error fetching boards:", error);
+        logger.error("Error fetching boards:", error);
         res.status(500).json({
             success: false,
             message: "Internal server error ",
@@ -79,7 +80,7 @@ const updateBoard = async(req, res) =>{
         })
         
     } catch (error) {
-        console.error(error);
+        logger.error("Error updating board:", error);
        return res.status(500).json({
             success: false,
             message: "cannot update board at the moment"
@@ -101,7 +102,7 @@ const deleteBoard = async(req, res) =>{
         });
         
     } catch (error) {
-        console.error("Error deleting",error)
+        logger.error("Error deleting board:",error)
         return res.status(500).json({
             success: false,
             message: "Internal server error"
@@ -127,8 +128,8 @@ return res.status(200).json({
     data: board
 })
 
-    } catch (error) {
-        console.error(error);
+    } catch ( error) {
+        logger.error("Error adding member:", error);
 
         return res.status(500).json({
             success: false,
@@ -154,7 +155,7 @@ return res.status(200).json({
 })
 
     } catch (error) {
-        console.error(error);
+        logger.error("Error removing member:", error);
         return res.status(500).json({
             success: false,
             message: error.message

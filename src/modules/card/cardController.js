@@ -1,4 +1,5 @@
  const { emitCardCreated, emitCardMoved } = require("../../realtime/emitter");
+const logger = require("../../utils/logger");
 const cardService = require("./cardService");
 
  
@@ -8,6 +9,7 @@ const createCard = async ( req, res) => {
         const { title, description, position, columnId} = req.body;
 
         if(!title || !description || !columnId|| position ===undefined){
+          logger.warn("CreateCard validation failed", { body: req.body, userId: req.user.userId });
             return res.status(400).json({
                 success: false,
                 message: "All fields required"
@@ -24,6 +26,13 @@ const createCard = async ( req, res) => {
 
         emitCardCreated(boardId, card);
 
+         logger.info("Card created", {
+            cardId: card._id,
+            boardId,
+            columnId,
+            userId: req.user.userId
+        });
+
         return res.status(201).json({
             success: true,
             message: " Card created successfully",
@@ -32,7 +41,7 @@ const createCard = async ( req, res) => {
 
 
     } catch (error) {
-        console.error("Error creating card", error);
+      logger.error("Error creating card", error);
         return res.status(500).json({
             success: false,
             message: "Internal server error"
@@ -60,6 +69,11 @@ const updateCard = async (req, res) => {
        }
     );
 
+    logger.info("Card updated", {
+            cardId: id,
+            userId: req.user.userId
+        });
+
     return res.status(200).json({
       success: true,
       message: "Card updated successfully",
@@ -69,13 +83,19 @@ const updateCard = async (req, res) => {
   } catch (error) {
 
     if (error.status === 409) {
+
+      logger.warn("Conflict detected while updating card", {
+                cardId: req.params.id,
+                userId: req.user.userId
+            });
+
       return res.status(409).json({
         success: false,
         message: error.message
       });
     }
 
-    console.error("Error updating card", error);
+    logger.error("Error updating card", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error"
@@ -89,6 +109,13 @@ const cardDelete = async ( req, res) => {
 
      const boardId = await cardService.deleteCard({ id, userId: req.user.userId});
 
+     logger.info("Card deleted", {
+            cardId: id,
+            boardId,
+            userId: req.user.userId
+        });
+
+
     return res.status(200).json({
       success: true,
       message: "Card deleted successfully",
@@ -98,7 +125,7 @@ const cardDelete = async ( req, res) => {
 
     } catch (error) {
 
-        console.error("Error deleting card", error);
+        logger.error("Error deleting card", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error"
@@ -122,6 +149,13 @@ const getCardsInColumn = async (req, res) => {
       limit: Number(limit) || 10
     });
       
+     logger.info("Fetched cards in column", {
+            columnId,
+            userId: req.user.userId,
+            page,
+            limit
+        });
+
 
     return res.status(200).json({
       success: true,
@@ -129,7 +163,7 @@ const getCardsInColumn = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Error fetching cards", error);
+    logger.error("Error fetching cards", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error"
@@ -147,6 +181,8 @@ const assignTag = async (req, res) => {
     const { name } = req.body;
 
     if (!name) {
+      logger.warn("AssignTag validation failed", { cardId: id });
+
       return res.status(400).json({
         success: false,
         message: "Name  is required"
@@ -154,6 +190,12 @@ const assignTag = async (req, res) => {
     }
 
     const card = await cardService.assignTag({ id, name, userId: req.user.userId})
+
+     logger.info("Tag assigned", {
+            cardId: id,
+            tagName: name,
+            userId: req.user.userId
+        });
 
     return res.status(200).json({
       success: true,
@@ -163,7 +205,7 @@ const assignTag = async (req, res) => {
 
   } catch (error) {
 
-    console.error("Error assigning tag:", error);
+    logger.error("Error assigning tag:", error);
 
     if (error.message === "Tag not found") return res.status(404).json({success: false, message: error.message})
     if (error.message === "Tag already assigned") return res.status(409).json({success: false, message: error.message})
@@ -208,7 +250,7 @@ const setDueDate = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Error setting due date:", error);
+    logger.error("Error setting due date:", error);
 
     return res.status(500).json({
       success: false,
@@ -231,12 +273,26 @@ const moveCard = async (req, res) => {
 
     emitCardMoved(boardId, card);
 
+    logger.info("Card moved", {
+            cardId: id,
+            boardId,
+            newColumnId: columnId,
+            position,
+            userId: req.user.userId
+        });
+
+
     return res.status(200).json({
       success: true,
       message: "card moved successfully",
       data: card
     })
   } catch (error) {
+    logger.error("Error moving card", {
+            error: error.message,
+            cardId: req.params.id
+        });
+
     return res.status(400).json({
       success: false,
       message: error.message

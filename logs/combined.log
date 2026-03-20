@@ -1,2 +1,8 @@
 {"level":"info","message":"Connecting to db.....","service":"board-system","timestamp":"2026-03-20 05:28:16"}
 {"level":"info","message":"Mongodb connected successfully","service":"board-system","timestamp":"2026-03-20 05:28:19"}
+{"level":"info","message":"Connecting to db.....","service":"board-system","timestamp":"2026-03-20 11:07:29"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"dC5snH_ZWeoJJ9LrAAAB","timestamp":"2026-03-20 11:07:30"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"dC5snH_ZWeoJJ9LrAAAB","timestamp":"2026-03-20 11:07:30"}
+{"level":"info","message":"Mongodb connected successfully","service":"board-system","timestamp":"2026-03-20 11:07:32"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"jANFCOH3B_BXA67PAAAD","timestamp":"2026-03-20 11:07:32"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"jANFCOH3B_BXA67PAAAD","timestamp":"2026-03-20 11:07:33"}

@@ -1,8 +1,11 @@
+const logger = require("../../utils/logger");
 const boardRepository = require("./boardRespository")
 
 const createBoard = async ({title, description, userId}) => {
-    console.log("Service values:", title, description);
+    logger.info("Service values:", title, description);
     if(!title || !description){
+         logger.warn("CreateBoard failed: missing title or description", { userId, title, description });
+
         throw new Error("Title and Description are required");
     }
 
@@ -53,6 +56,7 @@ const updateBoard = async (boardId, userId, title, description) => {
     );
 
     if(!updatedBoard) {
+         logger.warn("UpdateBoard failed: not found or unauthorized", { boardId, userId });
         throw new Error("Board not found or unauthorized");
     }
 
@@ -63,8 +67,11 @@ const deleteBoard = async (boardId, userId) => {
     const deleted = await boardRepository.deleteBoard(boardId, userId);
 
     if(!deleted){
+        logger.warn("DeleteBoard failed: not found or unauthorized", { boardId, userId });
         throw new Error ("Board not found or unauthorize")
     }
+
+    logger.info("Board deleted successfully", { boardId, userId });
     return deleted;
 }
 
@@ -72,9 +79,13 @@ const addMember = async ({ boardId, ownerId, memberId }) => {
 
     const board = await boardRepository.findBoardById(boardId);
 
-    if (!board) throw new Error ("Board not found");
+    if (!board) {
+        logger.warn("AddMember failed: board not found", { boardId, ownerId, memberId });
+        throw new Error ("Board not found");
+    }
 
     if (board.ownerId.toString() !== ownerId) {
+        logger.warn("AddMember failed: unauthorized", { boardId, ownerId, memberId });
         throw new Error("Only board owner can add members");
     }
 
@@ -94,12 +105,16 @@ const removeMember = async ({ boardId, ownerId, memberId }) => {
     if (!board) throw new Error("Board not found")
 
         if(board.ownerId.toString() !== ownerId){
+            logger.warn("RemoveMember failed: unauthorized", { boardId, ownerId, memberId });
             throw new Error("Only owner can remove members");
         }
 
         board.members = board.members.filter(
+
             id => id.toString() !== memberId
         );
+
+        logger.info("Member removed successfully", { boardId, ownerId, memberId });
 
         return await board.save();
 };

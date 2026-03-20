@@ -7,12 +7,17 @@ const addComment = async(req, res) => {
         const { cardId, content, parentComment } = req.body
 
         if(!cardId || !content){
+            logger.warn({
+                message: "Validation failed: missing cardId or content",
+                body: req.body,
+                userId: req.user?.userId
+            });
             return res.status(400).json({
                 success: false,
                 message: " CardId and content are require"
             });
         }
- console.log("cardId recived:", cardId)
+ looger.info("cardId recived:", cardId)
         const { comment, boardId}  = await commentService.addComment({
             cardId,
             content,
@@ -21,6 +26,14 @@ const addComment = async(req, res) => {
         });
 
         emitCommentAdded(boardId, comment);
+
+        logger.info({
+            message: "Comment added",
+            userId: req.user.userId,
+            cardId,
+            commentId: comment._id,
+            boardId
+        });
 
         return res.status(201).json({
             success: true,
@@ -51,6 +64,12 @@ const editComment = async (req, res) => {
             userId: req.user.userId
         });
 
+         logger.info({
+            message: "Comment updated",
+            userId: req.user.userId,
+            commentId: id
+        });
+
         return res.status(200).json({
             success: true,
             message: "Comment updated",
@@ -77,6 +96,14 @@ const deleteComment = async (req, res) => {
             onlyReplies
         })
 
+        logger.info({
+            message: "Comment deleted",
+            userId: req.user.userId,
+            commentId,
+            onlyReplies
+        });
+
+
 
         return res.status(200).json({
             success: true,
@@ -85,7 +112,7 @@ const deleteComment = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Error deleting comment:", error)
+    logger.error("Error deleting comment:", error)
         return res.status(500).json({
             success: false,
             message: error.message

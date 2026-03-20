@@ -1,4 +1,5 @@
- const tagService= require("./tagService");
+ const logger = require("../../utils/logger");
+const tagService= require("./tagService");
 
 const createTag = async (req, res) => {
   try {
@@ -25,7 +26,7 @@ const createTag = async (req, res) => {
 
   } catch (error) {
 
-    console.error("Error creating tag:", error);
+    logger.error("Error creating tag:", error);
 
     return res.status(500).json({
       success: false,

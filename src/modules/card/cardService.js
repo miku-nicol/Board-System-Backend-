@@ -8,14 +8,28 @@ const mongoose = require("mongoose");
 const verifyBoardAccess = async (columnId, userId) => {
     const column = await columnModel.findById(columnId);
 
-    if (!column) throw new Error("Column not found");
-
+    if (!column) {
+        logger.warn({
+            message: "Column not found",
+            columnId,
+            userId
+        });
+        throw new Error("Column not found");
+ }
     const board = await boardModel.findOne({
         _id: column.boardId,
         $or: [{ ownerId: userId}, { members: userId }]
     });
 
-    if (!board) throw new Error("Unauthorized");
+    if (!board) {
+logger.warn({
+            message: "Unauthorized board access",
+            columnId,
+            userId,
+            boardId: column.boardId
+        });
+        throw new Error("Unauthorized");
+    }
 
     return { column, board }
 
@@ -26,6 +40,14 @@ const createCard = async ({ title, description, position, columnId, userId}) => 
     const { board } = await verifyBoardAccess(columnId, userId);
 
     const card = await cardRespository.createCard({ title, description, position, columnId });
+
+    logger.info({
+        message: "Card created",
+        userId,
+        cardId: card._id,
+        columnId,
+        boardId: board._id
+    });
 
     return { card, boardId: board._id };
 };
@@ -40,6 +62,14 @@ const updateCard = async ({ id, title, description, position,version, userId }) 
     await verifyBoardAccess(card.columnId, userId);
 
     if (card.__v !== version){
+
+        logger.warn({
+        message: "Version conflict on update",
+        cardId: id,
+        userId,
+        currentVersion: card.__v,
+        requestVersion: version
+    });
        
         const error = new Error("Conflict detected. card was updated by another user.");
 
@@ -139,7 +169,11 @@ const moveCard = async ({ cardId, newColumnId, newPosition, userId }) => {
 
         const card = await cardRespository.findById(cardId, session);
 
-        if(!card) throw new Error("Card not found");
+        if(!card){
+                        logger.warn({ message: "Card not found", cardId, userId });
+                        throw new Error("Card not found");
+
+        } 
 
         await verifyBoardAccess(card.columnId, userId);
         await verifyBoardAccess(newColumnId, userId);
@@ -148,10 +182,15 @@ const moveCard = async ({ cardId, newColumnId, newPosition, userId }) => {
         const oldColumnId = card.columnId;
         const oldPosition = card.position;
 
-console.log("Old column:", oldColumnId);
-        console.log("New column:", newColumnId)
-        console.log("Old position:", oldPosition);
-        console.log("New position:", newPosition);
+logger.info({
+            message: "Moving card",
+            cardId,
+            userId,
+            fromColumn: oldColumnId,
+            toColumn: newColumnId,
+            fromPosition: oldPosition,
+            toPosition: newPosition
+        });
         /* close gap in old column*/
 
         await cardRespository.positionDelete(oldColumnId, oldPosition, session);
@@ -170,12 +209,20 @@ console.log("Old column:", oldColumnId);
         const boardId = column.boardId;
         await session.commitTransaction();
 
+        logger.info({
+            message: "Card moved successfully",
+            cardId,
+            boardId,
+            userId
+        });
+
+
         return { card, boardId };
 
         
 
     } catch (error){
-        console.error("Move card transaction error:", error);
+        logger.error("Move card transaction error:", error);
 
         if(session.inTransaction()) {
             await session.abortTransaction();
@@ -185,7 +232,7 @@ console.log("Old column:", oldColumnId);
     } finally {
         session.endSession();
     }
-}
+};
 
 
 

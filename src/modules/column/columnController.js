@@ -1,4 +1,5 @@
- const columnService = require("./columnService");
+ const logger = require("../../utils/logger");
+const columnService = require("./columnService");
 
 
 const createColumn = async ( req, res) => {
@@ -22,7 +23,7 @@ const createColumn = async ( req, res) => {
 
 
     } catch (error) {
-        console.error("Error creating column", error)
+        logger.error("Error creating column", error)
         return res.status(500).json({
             success: false,
             message: "Internal server"
@@ -54,7 +55,7 @@ const updateColumn = async(req, res) =>{
     })
         
     } catch (error) {
-        console.error('Error updating column', error)
+        logger.error('Error updating column', error)
         return res.status(500).json({
             success: false,
             message: "Internal server error"
@@ -80,7 +81,7 @@ const deleteColumn = async(req, res) =>{
         message: "Column deleted successfully"
     })
     } catch (error) {
-        console.error("Error deleting column", error)
+        logger.error("Error deleting column", error)
         return res.status(500).json({
             success: false,
             message: "Internal server error"
