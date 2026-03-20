@@ -28,7 +28,7 @@ describe('Integration Test - Full Board System Flow', () => {
     });
 
     it('should create a board, move a card, and add a comment successfully', async () => {
-        // ===== 1️⃣ Create Board =====
+        // ===== Create Board =====
         user = await userModel.create({ 
             name: 'Daniel Jane', 
             email: 'danieljane34@gmail.com', 
@@ -62,7 +62,7 @@ describe('Integration Test - Full Board System Flow', () => {
         // Create card
         card = await cardModel.create({ title: 'Task 1', columnId: column1._id, position: 1 });
 
-        // ===== 2️⃣ Move Card =====
+        // ===== Move Card =====
         const moveResult = await cardService.moveCard({
             cardId: card._id,
             newColumnId: column2._id,
@@ -75,7 +75,7 @@ describe('Integration Test - Full Board System Flow', () => {
         const cardInDb = await cardModel.findById(card._id);
         expect(cardInDb.columnId.toString()).toBe(column2._id.toString());
 
-        // ===== 3️⃣ Add Comment =====
+        // ==== Add Comment ====
         const commentData = { content: 'This is a comment', cardId: card._id, userId: user._id };
         const commentResult = await commentService.addComment(commentData);
 

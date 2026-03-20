@@ -90,7 +90,7 @@ describe("Card Service - moveCard", () => {
         await expect(
             cardService.moveCard({
                 cardId: mockCardId,
-                newColumnId: mockNewColumnId,  // This column is unauthorized
+                newColumnId: mockNewColumnId,  
                 newPosition: 3,
                 userId: mockUserId
             })

@@ -1,4 +1,3 @@
-// tests/unit/commentService.test.js
 const { addComment } = require('../../src/modules/comment/commentService');
 const commentRepository = require('../../src/modules/comment/commentRepository');
 const cardModel = require('../../src/modules/card/cardModel');
@@ -36,7 +35,7 @@ describe('Comment Service - addComment', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         
-        // Setup all successful responses for verifyBoardAccess
+
         cardModel.findById.mockResolvedValue(mockCard);
         columnModel.findById.mockResolvedValue(mockColumn);
         boardModel.findOne.mockResolvedValue(mockBoard);
@@ -65,7 +64,7 @@ describe('Comment Service - addComment', () => {
             boardId: mockBoardId
         });
         
-        // Verify all database calls were made
+        
         expect(cardModel.findById).toHaveBeenCalledWith(mockCardId);
         expect(columnModel.findById).toHaveBeenCalledWith(mockColumnId);
         expect(boardModel.findOne).toHaveBeenCalledWith({
@@ -128,7 +127,7 @@ describe('Comment Service - addComment', () => {
             parentComment: '507f1f77bcf86cd799439016'
         };
 
-        // Mock parent comment not found
+        
         commentRepository.findById.mockResolvedValue(null);
 
         await expect(addComment(mockCommentData)).rejects.toThrow("Parent comment not found");
@@ -165,7 +164,7 @@ describe('Comment Service - addComment', () => {
             userId: mockUserId
         };
 
-        // Override card mock to return null
+        
         cardModel.findById.mockResolvedValue(null);
 
         await expect(addComment(mockCommentData)).rejects.toThrow("Card not found");
@@ -183,7 +182,6 @@ describe('Comment Service - addComment', () => {
             userId: mockUserId
         };
 
-        // Override column mock to return null
         columnModel.findById.mockResolvedValue(null);
 
         await expect(addComment(mockCommentData)).rejects.toThrow("Column not found");
@@ -201,7 +199,7 @@ describe('Comment Service - addComment', () => {
             userId: mockUserId
         };
 
-        // Override board mock to return null (user not authorized)
+        
         boardModel.findOne.mockResolvedValue(null);
 
         await expect(addComment(mockCommentData)).rejects.toThrow("Unauthorized");
