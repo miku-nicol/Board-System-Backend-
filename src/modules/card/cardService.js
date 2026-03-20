@@ -3,6 +3,7 @@ const columnModel = require("../column/columnModel");
 const cardRespository = require("./cardRespository");
 const tagRepository = require("../tag/tagRepository")
 const mongoose = require("mongoose");
+const logger = require("../../utils/logger");
 
 
 const verifyBoardAccess = async (columnId, userId) => {

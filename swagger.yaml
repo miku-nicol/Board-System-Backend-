@@ -1,12 +1,12 @@
 openapi: 3.0.3
 info:
   title: Collaborative Board System Workspace API
-  description: API for managing boards, columns, cards, and tags
+  description: API for managing boards, columns, cards, comments, and tags
   version: 1.0.0
+
 servers:
   - url: http://localhost:9000/api/v1
     description: Local server
-
   - url: https://board-system-backend-project.onrender.com/api/v1
     description: Production server
 
@@ -20,49 +20,41 @@ components:
   schemas:
     UserRegister:
       type: object
-      required:
-        - name
-        - email
-        - phoneNumber
-        - password
+      required: [name, email, phoneNumber, password]
       properties:
         name:
           type: string
-          example: "John Doe"
+          example: John Doe
         email:
           type: string
-          format: email
-          example: "john@example.com"
+          example: john@example.com
         phoneNumber:
           type: string
           example: "+1234567890"
         password:
           type: string
-          format: password
-          example: "securePassword123"
+          example: password123
 
     UserLogin:
       type: object
-      required:
-        - email
-        - password
+      required: [email, password]
       properties:
         email:
           type: string
-          format: email
-          example: "john@example.com"
+          example: john@example.com
         password:
           type: string
-          format: password
-          example: "securePassword123"
+          example: password123
 
     Board:
       type: object
       properties:
         title:
           type: string
+          example: Project Board
         description:
           type: string
+          example: Manage tasks
 
     Column:
       type: object
@@ -85,6 +77,12 @@ components:
           type: integer
         columnId:
           type: string
+        dueDate:
+          type: string
+          format: date-time
+        __v:
+          type: integer
+          description: Version field for conflict handling
 
     Tag:
       type: object
@@ -94,15 +92,26 @@ components:
         boardId:
           type: string
 
+    Comment:
+      type: object
+      properties:
+        cardId:
+          type: string
+        content:
+          type: string
+        parentComment:
+          type: string
+          nullable: true
+
 security:
   - bearerAuth: []
 
 paths:
+
   /user/register:
     post:
-      tags:
-        - User
-      summary: Register a new user
+      tags: [User]
+      summary: Register user
       requestBody:
         required: true
         content:
@@ -111,17 +120,12 @@ paths:
               $ref: '#/components/schemas/UserRegister'
       responses:
         201:
-          description: User registration successful
-        409:
-          description: Email or phone already used
-        500:
-          description: Internal server error
+          description: User registered
 
   /user/login:
     post:
-      tags:
-        - User
-      summary: Login a user
+      tags: [User]
+      summary: Login user
       requestBody:
         required: true
         content:
@@ -131,18 +135,11 @@ paths:
       responses:
         200:
           description: Login successful
-        401:
-          description: Invalid email or password
-        500:
-          description: Internal server error
 
   /boards:
     post:
-      tags:
-        - Board
-      summary: Create a new board
-      security:
-        - bearerAuth: []
+      tags: [Board]
+      summary: Create board
       requestBody:
         required: true
         content:
@@ -151,32 +148,28 @@ paths:
               $ref: '#/components/schemas/Board'
       responses:
         201:
-          description: Board created successfully
-        400:
-          description: Title or description missing
-        500:
-          description: Internal server error
+          description: Board created
+
     get:
-      tags:
-        - Board
-      summary: Get all boards for logged-in user
-      security:
-        - bearerAuth: []
+      tags: [Board]
+      summary: Get boards (paginated)
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
       responses:
         200:
-          description: Boards retrieved successfully
-        404:
-          description: No boards found
-        500:
-          description: Internal server error
+          description: Boards retrieved
 
   /boards/{id}:
     patch:
-      tags:
-        - Board
-      summary: Update a board
-      security:
-        - bearerAuth: []
+      tags: [Board]
+      summary: Update board
       parameters:
         - in: path
           name: id
@@ -191,38 +184,23 @@ paths:
               $ref: '#/components/schemas/Board'
       responses:
         200:
-          description: Board updated successfully
-        404:
-          description: Board not found
-        500:
-          description: Internal server error
+          description: Updated
+
     delete:
-      tags:
-        - Board
-      summary: Delete a board
-      security:
-        - bearerAuth: []
+      tags: [Board]
+      summary: Delete board
       parameters:
         - in: path
           name: id
           required: true
-          schema:
-            type: string
       responses:
         200:
-          description: Board deleted successfully
-        404:
-          description: Board not found
-        500:
-          description: Internal server error
+          description: Deleted
 
   /column:
     post:
-      tags:
-        - Column
-      summary: Create a column
-      security:
-        - bearerAuth: []
+      tags: [Column]
+      summary: Create column
       requestBody:
         required: true
         content:
@@ -231,74 +209,12 @@ paths:
               $ref: '#/components/schemas/Column'
       responses:
         201:
-          description: Column created successfully
-        400:
-          description: Required fields missing
-        500:
-          description: Internal server error
-
-  /column/{id}:
-    patch:
-      tags:
-        - Column
-      summary: Update a column
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Column'
-      responses:
-        200:
-          description: Column updated successfully
-        404:
-          description: Column not found
-        500:
-          description: Internal server error
-    delete:
-      tags:
-        - Column
-      summary: Delete a column
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                boardId:
-                  type: string
-      responses:
-        200:
-          description: Column deleted successfully
-        404:
-          description: Column not found
-        500:
-          description: Internal server error
+          description: Created
 
   /card:
     post:
-      tags:
-        - Card
-      summary: Create a card
-      security:
-        - bearerAuth: []
+      tags: [Card]
+      summary: Create card
       requestBody:
         required: true
         content:
@@ -307,25 +223,16 @@ paths:
               $ref: '#/components/schemas/Card'
       responses:
         201:
-          description: Card created successfully
-        400:
-          description: Required fields missing
-        500:
-          description: Internal server error
+          description: Created
 
   /card/{id}:
     patch:
-      tags:
-        - Card
-      summary: Update a card
-      security:
-        - bearerAuth: []
+      tags: [Card]
+      summary: Update card (with conflict handling)
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
@@ -335,71 +242,78 @@ paths:
               properties:
                 title:
                   type: string
-                description:
+                position:
+                  type: integer
+                __v:
+                  type: integer
+      responses:
+        200:
+          description: Updated
+        409:
+          description: Conflict detected
+
+    delete:
+      tags: [Card]
+      summary: Delete card
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        200:
+          description: Deleted
+
+  /card/{id}/move:
+    patch:
+      tags: [Card]
+      summary: Move card
+      parameters:
+        - in: path
+          name: id
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                columnId:
                   type: string
                 position:
                   type: integer
       responses:
         200:
-          description: Card updated successfully
-        404:
-          description: Card not found
-        500:
-          description: Internal server error
-    delete:
-      tags:
-        - Card
-      summary: Delete a card
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: Card deleted successfully
-        404:
-          description: Card not found
-        500:
-          description: Internal server error
+          description: Card moved
 
   /card/column/{columnId}:
     get:
-      tags:
-        - Card
-      summary: Get all cards in a column
-      security:
-        - bearerAuth: []
+      tags: [Card]
+      summary: Get cards in column
       parameters:
-        - name: columnId
-          in: path
+        - in: path
+          name: columnId
           required: true
+        - in: query
+          name: page
           schema:
-            type: string
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
       responses:
         200:
-          description: Cards retrieved successfully
-        404:
-          description: Column not found
-        500:
-          description: Internal server error
+          description: Cards retrieved
 
   /card/{id}/tag:
     post:
-      tags:
-        - Card
-      summary: Assign tag to card
-      security:
-        - bearerAuth: []
+      tags: [Card]
+      summary: Assign tag
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
@@ -411,27 +325,16 @@ paths:
                   type: string
       responses:
         200:
-          description: Tag assigned successfully
-        400:
-          description: Tag already assigned or missing
-        404:
-          description: Card or Tag not found
-        500:
-          description: Internal server error
+          description: Tag assigned
 
   /card/{id}/due-date:
     patch:
-      tags:
-        - Card
-      summary: Set due date for a card
-      security:
-        - bearerAuth: []
+      tags: [Card]
+      summary: Set due date
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
@@ -441,24 +344,77 @@ paths:
               properties:
                 dueDate:
                   type: string
-                  format: date-time
       responses:
         200:
-          description: Due date set successfully
-        400:
-          description: Due date missing
-        404:
-          description: Card not found
-        500:
-          description: Internal server error
+          description: Due date set
+
+  /comment:
+    post:
+      tags: [Comment]
+      summary: Add comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        201:
+          description: Comment added
+
+  /comments/{id}:
+    put:
+      tags: [Comment]
+      summary: Edit comment
+      parameters:
+        - in: path
+          name: id
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        200:
+          description: Updated
+
+  /comments/{commentId}:
+    delete:
+      tags: [Comment]
+      summary: Delete comment
+      parameters:
+        - in: path
+          name: commentId
+          required: true
+        - in: query
+          name: onlyReplies
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: Deleted
+
+  /comments/card/{cardId}:
+    get:
+      tags: [Comment]
+      summary: Get comments
+      parameters:
+        - in: path
+          name: cardId
+          required: true
+      responses:
+        200:
+          description: Comments retrieved
 
   /tag:
     post:
-      tags:
-        - Tag
-      summary: Create a tag
-      security:
-        - bearerAuth: []
+      tags: [Tag]
+      summary: Create tag
       requestBody:
         required: true
         content:
@@ -467,8 +423,16 @@ paths:
               $ref: '#/components/schemas/Tag'
       responses:
         201:
-          description: Tag created successfully
-        400:
-          description: Missing required fields or tag exists
-        500:
-          description: Internal server error
+          description: Tag created
+
+x-socket-events:
+  description: Real-time events via Socket.IO
+  events:
+    - name: joinBoard
+      description: Join board room
+    - name: cardCreated
+      description: Card created
+    - name: cardMoved
+      description: Card moved
+    - name: commentAdded
+      description: Comment added

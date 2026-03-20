@@ -1,3 +1,4 @@
+const logger = require("../../utils/logger");
 const userService = require("./userService")
 
 const register = async (req, res) => {

@@ -6,3 +6,50 @@
 {"level":"info","message":"Mongodb connected successfully","service":"board-system","timestamp":"2026-03-20 11:07:32"}
 {"level":"info","message":"User connected","service":"board-system","socketId":"jANFCOH3B_BXA67PAAAD","timestamp":"2026-03-20 11:07:32"}
 {"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"jANFCOH3B_BXA67PAAAD","timestamp":"2026-03-20 11:07:33"}
+{"level":"info","message":"Connecting to db.....","service":"board-system","timestamp":"2026-03-20 14:39:51"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"xsU-PdVgckK7OGTeAAAB","timestamp":"2026-03-20 14:39:51"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"xsU-PdVgckK7OGTeAAAB","timestamp":"2026-03-20 14:39:52"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"JysXBNBezLthgJUpAAAD","timestamp":"2026-03-20 14:39:52"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"JysXBNBezLthgJUpAAAD","timestamp":"2026-03-20 14:39:52"}
+{"level":"info","message":"Mongodb connected successfully","service":"board-system","timestamp":"2026-03-20 14:39:54"}
+{"level":"info","message":"Connecting to db.....","service":"board-system","timestamp":"2026-03-20 14:43:04"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"-HQ4mtz4gSKHmFNoAAAB","timestamp":"2026-03-20 14:43:05"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"-HQ4mtz4gSKHmFNoAAAB","timestamp":"2026-03-20 14:43:05"}
+{"level":"info","message":"Mongodb connected successfully","service":"board-system","timestamp":"2026-03-20 14:43:07"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"PMeGex_AeBHmqiHuAAAD","timestamp":"2026-03-20 14:43:08"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"PMeGex_AeBHmqiHuAAAD","timestamp":"2026-03-20 14:43:08"}
+{"email":"miracleuwaifo9@gmail.com","error":"Invaild email or password","level":"warn","message":"Login failed","service":"board-system","timestamp":"2026-03-20 14:44:21"}
+{"email":"miracleuwaifo9@gmail.com","level":"info","message":"User login successful","service":"board-system","timestamp":"2026-03-20 14:45:06"}
+{"level":"error","message":"Error creating card logger is not defined","service":"board-system","stack":"ReferenceError: logger is not defined\n    at Object.createCard (C:\\Users\\User\\Desktop\\Talenvo intern\\boardSystem\\src\\modules\\card\\cardService.js:44:5)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async createCard (C:\\Users\\User\\Desktop\\Talenvo intern\\boardSystem\\src\\modules\\card\\cardController.js:19:34)","timestamp":"2026-03-20 14:50:47"}
+{"level":"info","message":"Connecting to db.....","service":"board-system","timestamp":"2026-03-20 14:52:11"}
+{"level":"info","message":"Mongodb connected successfully","service":"board-system","timestamp":"2026-03-20 14:52:14"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"lcM_OmEyMUX28smtAAAC","timestamp":"2026-03-20 14:52:16"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"lcM_OmEyMUX28smtAAAC","timestamp":"2026-03-20 14:52:16"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"NOWkZ1ZwywECqTaHAAAD","timestamp":"2026-03-20 14:52:16"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"NOWkZ1ZwywECqTaHAAAD","timestamp":"2026-03-20 14:52:16"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","cardId":"69bd51a874bb49ea6bb12817","columnId":"69b5ef80bfb6daf52e1e79a6","level":"info","message":"Card created","service":"board-system","timestamp":"2026-03-20 14:54:48","userId":"69a78a032ceada5d47799699"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","cardId":"69bd51a874bb49ea6bb12817","columnId":"69b5ef80bfb6daf52e1e79a6","level":"info","message":"Card created","service":"board-system","timestamp":"2026-03-20 14:54:48","userId":"69a78a032ceada5d47799699"}
+{"cardId":"69bd51a874bb49ea6bb12817","level":"info","message":"Card updated","service":"board-system","timestamp":"2026-03-20 14:55:56","userId":"69a78a032ceada5d47799699"}
+{"level":"info","message":"Connecting to db.....","service":"board-system","timestamp":"2026-03-20 15:01:11"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"7dTFTLmcHohSX-9FAAAB","timestamp":"2026-03-20 15:01:12"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"7dTFTLmcHohSX-9FAAAB","timestamp":"2026-03-20 15:01:12"}
+{"level":"info","message":"Mongodb connected successfully","service":"board-system","timestamp":"2026-03-20 15:01:14"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"CIH52sRwjqYlVYJtAAAD","timestamp":"2026-03-20 15:01:15"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"CIH52sRwjqYlVYJtAAAD","timestamp":"2026-03-20 15:01:15"}
+{"email":"miracleuwaifo9@gmail.com","level":"info","message":"User login successful","service":"board-system","timestamp":"2026-03-20 15:02:48"}
+{"level":"info","message":"Connecting to db.....","service":"board-system","timestamp":"2026-03-20 15:03:45"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"r_KC8E2zM13X_1_qAAAB","timestamp":"2026-03-20 15:03:47"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"r_KC8E2zM13X_1_qAAAB","timestamp":"2026-03-20 15:03:47"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"QmDiUNKZkUYY5xV6AAAD","timestamp":"2026-03-20 15:03:47"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"QmDiUNKZkUYY5xV6AAAD","timestamp":"2026-03-20 15:03:47"}
+{"level":"info","message":"Mongodb connected successfully","service":"board-system","timestamp":"2026-03-20 15:03:48"}
+{"email":"miracleuwaifo9@gmail.com","level":"info","message":"User login successful","service":"board-system","timestamp":"2026-03-20 15:07:30"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","cardId":"69bd553013279ed552e25c7c","columnId":"69b5ef80bfb6daf52e1e79a6","level":"info","message":"Card created","service":"board-system","timestamp":"2026-03-20 15:09:52","userId":"69a78a032ceada5d47799699"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","cardId":"69bd553013279ed552e25c7c","columnId":"69b5ef80bfb6daf52e1e79a6","level":"info","message":"Card created","service":"board-system","timestamp":"2026-03-20 15:09:52","userId":"69a78a032ceada5d47799699"}
+{"cardId":"69bd553013279ed552e25c7c","level":"info","message":"Card updated","service":"board-system","timestamp":"2026-03-20 15:11:23","userId":"69a78a032ceada5d47799699"}
+{"level":"info","message":"User disconnected","reason":"transport close","service":"board-system","socketId":"QmDiUNKZkUYY5xV6AAAD","timestamp":"2026-03-20 15:19:10"}
+{"level":"info","message":"User disconnected","reason":"transport close","service":"board-system","socketId":"r_KC8E2zM13X_1_qAAAB","timestamp":"2026-03-20 15:19:10"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"VdOcaKDRaDI3ySFyAAAG","timestamp":"2026-03-20 15:19:11"}
+{"level":"info","message":"User connected","service":"board-system","socketId":"WfrwyWfCPO_mGYviAAAH","timestamp":"2026-03-20 15:19:11"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"WfrwyWfCPO_mGYviAAAH","timestamp":"2026-03-20 15:19:12"}
+{"boardId":"69b4b17684dcc4f0ff5118b8","level":"info","message":"User joined board room","room":"board:69b4b17684dcc4f0ff5118b8","service":"board-system","socketId":"VdOcaKDRaDI3ySFyAAAG","timestamp":"2026-03-20 15:19:12"}
