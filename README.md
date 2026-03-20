@@ -2,6 +2,7 @@
 ![Database schema](./doc/db-schema.png)
 
 ## Architecture and folder reasoning
+```text
 doc/
 src/
 │
@@ -95,7 +96,8 @@ boardModel
   .populate("members", "name email")
   .populate("ownerId", "name")
 cardModel.select("title position columnId")
-To aviod nested population and only fetch required fields to reduce query cost, improve response time and ensure scalability.
+
+Benefits: Reduces query cost, memory usage, improves response time, ensures scalability
 
 ## REAL-TIME APPROACH
 User need instant updates when another user creates, moves, or comments on a card.
