@@ -189,4 +189,4 @@ console.log("Old column:", oldColumnId);
 
 
 
-module.exports = { createCard, updateCard, deleteCard, assignTag, setDueDate, getCardsInColumn, moveCard }
+module.exports = { createCard, updateCard, deleteCard, assignTag, setDueDate, getCardsInColumn, moveCard, verifyBoardAccess }

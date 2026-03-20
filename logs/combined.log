@@ -1,0 +1,2 @@
+{"level":"info","message":"Connecting to db.....","service":"board-system","timestamp":"2026-03-20 05:28:16"}
+{"level":"info","message":"Mongodb connected successfully","service":"board-system","timestamp":"2026-03-20 05:28:19"}
