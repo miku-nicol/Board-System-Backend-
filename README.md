@@ -87,5 +87,21 @@ cardModel
 .select("title position columnId")
 To aviod nested population and only fetch required fields to reduce query cost, improve response time and ensure scalability.
 
+## REAL-TIME APPROACH
+User need instant updates when another user creates, moves, or comments on a card.
+
+SOCKET.IO + ROOM
+Each board has a dedicated room
+Client join the room upon viewing a board
+Server emits event only to that room 
+
+## LOGGING AND OBSERVABILITY
+Structured logging useing LOGGER(info, warn, error)
+Logs inculded context: userId, boardId, cardId
+Enable debugging of:
+version conflicts
+Failed board access
+Transaction failures
+
 ## link to deploy api
 https://board-system-backend-project.onrender.com/
